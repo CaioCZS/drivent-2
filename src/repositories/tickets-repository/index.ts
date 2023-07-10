@@ -29,6 +29,14 @@ async function create(ticketTypeId: number, enrollmentId: number) {
   });
 }
 
-const ticketRepository = { findMany, findUnique, create };
+async function findTicketId(id: number) {
+  return prisma.ticket.findUnique({
+    where: {
+      id,
+    },
+  });
+}
+
+const ticketRepository = { findMany, findUnique, create, findTicketId };
 
 export default ticketRepository;
