@@ -42,12 +42,17 @@ async function ticketIsFromUser(userId: number, ticket: Ticket) {
   }
 }
 
+async function updateStatus(ticketId: number) {
+  return await ticketRepository.updateStatus(ticketId);
+}
+
 const ticketsService = {
   getAllTicketTypes,
   getUserTicket,
   createTicket,
   ticketExist,
   ticketIsFromUser,
+  updateStatus,
 };
 
 export default ticketsService;

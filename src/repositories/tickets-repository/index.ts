@@ -34,9 +34,22 @@ async function findTicketId(id: number) {
     where: {
       id,
     },
+    include: {
+      TicketType: true,
+    },
   });
 }
 
-const ticketRepository = { findMany, findUnique, create, findTicketId };
+async function updateStatus(ticketId: number) {
+  return prisma.ticket.update({
+    data: {
+      status: 'PAID',
+    },
+    where: {
+      id: ticketId,
+    },
+  });
+}
+const ticketRepository = { findMany, findUnique, create, findTicketId, updateStatus };
 
 export default ticketRepository;

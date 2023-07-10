@@ -1,10 +1,9 @@
 import { Response } from 'express';
 import httpStatus from 'http-status';
 import { AuthenticatedRequest } from '../middlewares';
-import { TicketTypeId } from '../schemas';
 import paymentService from '../services/payments-service';
-import { requestError } from '../errors';
 import ticketsService from '../services/tickets-service';
+import { PaymentBody } from '../schemas/payments-schema';
 
 export async function getUserPayment(req: AuthenticatedRequest, res: Response) {
   const ticketId = Number(req.query.ticketId);
@@ -12,6 +11,7 @@ export async function getUserPayment(req: AuthenticatedRequest, res: Response) {
   if (!ticketId) {
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
+
   const ticket = await ticketsService.ticketExist(ticketId);
   await ticketsService.ticketIsFromUser(userId, ticket);
 
@@ -21,5 +21,16 @@ export async function getUserPayment(req: AuthenticatedRequest, res: Response) {
 }
 
 export async function postUserPayment(req: AuthenticatedRequest, res: Response) {
-  res.send('postUserPayment');
+  const { ticketId, cardData } = req.body as PaymentBody;
+  const { userId } = req;
+  if (!ticketId || !cardData) {
+    return res.sendStatus(httpStatus.BAD_REQUEST);
+  }
+  const ticket = await ticketsService.ticketExist(ticketId);
+  await ticketsService.ticketIsFromUser(userId, ticket);
+
+  const value = ticket.TicketType.price;
+  const payment = await paymentService.createPayment(req.body, value);
+  await ticketsService.updateStatus(ticketId);
+  res.send(payment);
 }
