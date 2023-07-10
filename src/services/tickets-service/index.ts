@@ -43,7 +43,7 @@ async function ticketIsFromUser(userId: number, ticket: Ticket) {
 }
 
 async function updateStatus(ticketId: number) {
-  return await ticketRepository.updateStatus(ticketId);
+  return ticketRepository.updateStatus(ticketId);
 }
 
 const ticketsService = {

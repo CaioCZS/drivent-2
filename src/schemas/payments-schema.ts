@@ -1,5 +1,3 @@
-import Joi from 'joi';
-
 type CardData = {
   issuer: string;
   number: number;
