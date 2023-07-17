@@ -1,3 +1,4 @@
+import { TicketStatus } from '@prisma/client';
 import { prisma } from '@/config';
 
 async function findMany() {
@@ -43,7 +44,7 @@ async function findTicketId(id: number) {
 async function updateStatus(ticketId: number) {
   return prisma.ticket.update({
     data: {
-      status: 'PAID',
+      status: TicketStatus.PAID,
     },
     where: {
       id: ticketId,
