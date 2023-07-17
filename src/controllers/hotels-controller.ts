@@ -10,9 +10,6 @@ export async function getHotels(req: AuthenticatedRequest, res: Response) {
     const hotels = await hotelsService.findHotels();
     res.send(hotels);
   } catch (error) {
-    if (error.type === 'no_content_error') {
-      return res.status(httpStatus.NO_CONTENT).send([]);
-    }
     if (error.type === 'not_found_error') {
       return res.status(httpStatus.NOT_FOUND).send(error.message);
     }

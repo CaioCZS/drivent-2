@@ -99,7 +99,7 @@ describe('GET /hotels', () => {
       expect(response.status).toBe(httpStatus.PAYMENT_REQUIRED);
     });
 
-    it('should respond with status 204 if is no hotels registered', async () => {
+    it('should respond with status 404 if is no hotels registered', async () => {
       const user = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
@@ -109,7 +109,7 @@ describe('GET /hotels', () => {
 
       const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
 
-      expect(response.status).toBe(httpStatus.NO_CONTENT);
+      expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
 
     it('should respond with status 200 and hotels', async () => {
@@ -119,9 +119,8 @@ describe('GET /hotels', () => {
       const ticketType = await createTicketTypeHotel(false, true);
       const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
       await createPayment(ticket.id, ticketType.price);
-
-      const firstHotel = await createHotel();
-      const secondHotel = await createHotel();
+      await createHotel();
+      await createHotel();
       const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(httpStatus.OK);

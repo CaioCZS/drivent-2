@@ -7,7 +7,7 @@ async function findHotels() {
   const hotels = await hotelsRepository.find();
   if (hotels.length === 0) {
     throw {
-      type: 'no_content_error',
+      type: 'not_found_error',
       maessage: 'no hotels found',
     };
   }
