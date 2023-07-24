@@ -1,6 +1,7 @@
 import { TicketStatus } from '@prisma/client';
 import enrollmentRepository from '../../repositories/enrollment-repository';
 import ticketRepository from '../../repositories/tickets-repository';
+import { notFoundError } from '../../errors';
 import hotelsRepository from '@/repositories/hotels-repository';
 
 async function findHotels() {
@@ -24,6 +25,20 @@ async function findHotelById(id: number) {
   }
 
   return hotel;
+}
+
+async function verifyRoom(id: number) {
+  const room = await hotelsRepository.findRoom(id);
+  if (!room) {
+    throw notFoundError();
+  }
+  const count = await hotelsRepository.countRoom(id);
+  if (room.capacity === count) {
+    throw {
+      type: 'payment_error',
+      message: 'no vagancy for this room',
+    };
+  }
 }
 
 async function verifyUser(id: number) {
@@ -54,6 +69,6 @@ async function verifyUser(id: number) {
     };
   }
 }
-const hotelsService = { findHotels, findHotelById, verifyUser };
+const hotelsService = { findHotels, findHotelById, verifyUser, verifyRoom };
 
 export default hotelsService;
