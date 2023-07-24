@@ -1,6 +1,6 @@
 import bookingRepository from '@/repositories/booking-repository';
 import hotelsService from '@/services/hotels-service';
-import bookingService from '@/services/booking-services';
+import bookingService from '@/services/booking-service';
 
 beforeEach(() => {
   jest.clearAllMocks();
